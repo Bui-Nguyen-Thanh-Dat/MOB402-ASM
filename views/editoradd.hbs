@@ -9,41 +9,41 @@
 
 </head>
 <body>
-  <form action="/addproduct" method="POST">
+  <form action="/addproduct" method="POST" enctype="multipart/form-data">
     <div class="mb-3 row" style="margin-top: 5%; margin-left: 5%;margin-right:5% ;">
     <label class="col-sm-2 col-form-label">Mã sản phẩm</label>
     <div class="col-sm-10">
-       <input class="form-control form-control-sm" type="text" name="masp" id="masp" aria-label=".form-control-sm example">
+       <input class="form-control form-control-sm" type="text" name="masp" id="masp" aria-label=".form-control-sm example" required>
     </div>
   </div>
   <div class="mb-3 row" style="margin-left: 5%;margin-right:5% ;">
     <label class="col-sm-2 col-form-label">Tên sản phẩm</label>
     <div class="col-sm-10">
-       <input class="form-control form-control-sm" type="text" name="tensp" id="tensp"  aria-label=".form-control-sm example">
+       <input class="form-control form-control-sm" type="text" name="tensp" id="tensp"  aria-label=".form-control-sm example" required>
     </div>
   </div>
   <div class="mb-3 row" style="margin-left: 5%;margin-right:5% ;">
     <label class="col-sm-2 col-form-label">Loại sản phẩm</label>
     <div class="col-sm-10">
-       <input class="form-control form-control-sm" type="text" name="loaisp" id="loaisp" aria-label=".form-control-sm example">
+       <input class="form-control form-control-sm" type="text" name="loaisp" id="loaisp" aria-label=".form-control-sm example" required>
     </div>
   </div>
   <div class="mb-3 row" style="margin-left: 5%;margin-right:5% ;">
     <label  class="col-sm-2 col-form-label">Đơn giá</label>
     <div class="col-sm-10">
-       <input class="form-control form-control-sm" type="text" name="price" id="price" aria-label=".form-control-sm example">
+       <input class="form-control form-control-sm" type="text" name="price" id="price" aria-label=".form-control-sm example" required>
     </div>
   </div>
   <div class="mb-3 row" style="margin-left: 5%;margin-right:5% ;">
     <label class="col-sm-2 col-form-label">Hình ảnh</label>
     <div class="col-sm-10">
-       <input class="form-control form-control-sm" type="file" name="image" id="image" aria-label=".form-control-sm example">
+       <input class="form-control form-control-sm" type="file" name="image" id="image" aria-label=".form-control-sm example" required>
     </div>
   </div>
   <div class="mb-3 row" style="margin-left: 5%;margin-right:5% ;">
     <label class="col-sm-2 col-form-label">Màu sắc</label>
     <div class="col-sm-10">
-       <input class="form-control form-control-sm" type="text" name="color" id="color"  aria-label=".form-control-sm example">
+       <input class="form-control form-control-sm" type="text" name="color" id="color"  aria-label=".form-control-sm example" required>
     </div>
   </div>
    <div class="mb-3 row" style="margin-left: 5%;margin-right:5% ;">

@@ -15,26 +15,45 @@ app.use(bodyParser.json());
   useUnifiedTopology: true,
   });
 
-// var storage=multer.diskStorage({
-//   destination: function (req,file,cb) {
-//      var dir='./uploads';
-//      if(!fs.existsSync(dir)){
-//       fs.mkdirSync(dir,{recursive:true});
-//      }
-//   }
-// })
+var storage=multer.diskStorage({
+  destination: function (req,file,cb) {
+     var dir='./uploads';
+     if(!fs.existsSync(dir)){
+      fs.mkdirSync(dir,{recursive:true});
+     }
+     cb(null,'./uploads')
+  },
+  filename:function (req,file,cb) {
+    let fileName=file.originalname;
+    arr=fileName.split('.');
+    let newFileName='';
+    for (let i = 0; i < arr.length; i++) {
+      if (i!=arr.length -1) {
+        newFileName+=arr[i];
+      }else{
+        newFileName += ('-'+Date.now()+'.'+arr[i]);
+      }
+    }
+    cb(null,newFileName)
+  }
+})
+
+const imagePath='./uploads';
+app.use('/uploads',express.static(imagePath));
 
 app.engine('.hbs', expresshbs.engine({extname: '.hbs'}));
 app.set('view engine', '.hbs');
 
 var usersRouter=require('./routes/users');
 app.use('/users',usersRouter);
+var apiRouter=require('./api/api');
+app.use('/api',apiRouter );
 
 app.get('/danhsach', async(req, res)=>{
   try {
     const data = await Product.find({}).lean();
-    
-    res.render('home',{
+    console.log(data);
+      res.render('home',{
       layout:'listproduct',
       data:data
     });
@@ -45,20 +64,26 @@ app.get('/danhsach', async(req, res)=>{
   
 });
 
-app.post('/addproduct', async (req, res, next) => {
+var upload=multer({storage:storage});
+app.post('/addproduct',upload.single('image'),async (req, res, next) => {
   let masp = req.body.masp;
   let tensp = req.body.tensp;
   let loaisp = req.body.loaisp;
+ 
   let price = req.body.price;
   let color = req.body.color;
-
-  
+  var image;
+  if (req.file==null) {
+    image="";
+  }else{
+    image="/uploads/"+req.file.filename;
+  }
   let addProduct = new Product({
       masp: masp,
       tensp: tensp,
       loaisp: loaisp,
       price: price,
-      image: "",
+      image:image,
       color: color,
   })
 
@@ -83,9 +108,20 @@ try {
 }
 });
 
-app.post('/updateproduct/update/:id', async (req, res) => {
+app.post('/updateproduct/update/:id',upload.single('image') ,async (req, res) => {
   const productId = req.params.id;
-  const { masp, tensp, loaisp, price, image, color } = req.body;
+  let masp = req.body.masp;
+  let tensp = req.body.tensp;
+  let loaisp = req.body.loaisp;
+  let price = req.body.price;
+  let color = req.body.color;
+  var image;
+  if (req.file==null) {
+    image="";
+  }else{
+    image="/uploads/"+req.file.filename;
+  }
+
   // Thực hiện lưu dữ liệu vào MongoDB
   try {
     const updatedProduct = await Product.findByIdAndUpdate(
@@ -101,7 +137,6 @@ app.post('/updateproduct/update/:id', async (req, res) => {
   }
 });
 
-
 app.get('/updateproduct/:id', async(req, res)=>{
     const product=await Product.findById(req.params.id).lean();
     res.render('home',{
@@ -113,6 +148,15 @@ app.get('/updateproduct/:id', async(req, res)=>{
 app.get('/addproduct',function(req, res){
     res.render('editoradd');
 });
+
+app.get('/search',async(req, res)=>{
+    let search= req.body.search;
+
+    const data= Product.findById({tensp:search}).lean();
+
+    res.redirect('/users/danhsach?data=' + data);
+
+})
 
 app.listen(8000, function(){
     console.log("Server is running on port 8000");
